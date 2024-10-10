@@ -7,7 +7,7 @@
             "actions": [
                 {
                     "name": "Move",
-                    "type": "Value",
+                    "type": "PassThrough",
                     "id": "577f2b3b-7f1d-4529-be96-5db6c258c1a4",
                     "expectedControlType": "Axis",
                     "processors": "",
@@ -18,6 +18,24 @@
                     "name": "Attack",
                     "type": "Button",
                     "id": "f8f63d33-6b9a-4b4c-a8e3-7f913af50913",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Dash",
+                    "type": "Button",
+                    "id": "6bf0e8fd-5587-402c-aaf9-6e965347b14a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Jump",
+                    "type": "Button",
+                    "id": "52b0cb72-9a60-4b8c-84d3-548735a106cb",
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
@@ -66,6 +84,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d73d60a5-b86f-4b57-a055-06bd6b6ed908",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Dash",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7603db27-96a1-408e-a7c9-5c464cdddc66",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Jump",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
