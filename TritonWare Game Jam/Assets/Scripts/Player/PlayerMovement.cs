@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public partial class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     private const float Acceleration = .2f;
     private const float Deceleration = .1f;
@@ -12,10 +12,12 @@ public partial class PlayerMovement : MonoBehaviour
     private PlayerStats _stats;
 
     private float _inputDirection;
+    private int _currentJumps = 0;
+    
 
     private Vector3 _gravityDirection = Vector3.down;
     private float _gravityScale = 30;
-    private bool _addGravity;
+    private bool _addGravity = true;
 
     private void Start()
     {
@@ -30,6 +32,8 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        ResetVelocity();
+        ResetJumps();
         AddPlayerForce();
         AddGravityForce();
     }
@@ -42,15 +46,36 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext context)
     {
-        _rb.velocity = new Vector2(_rb.velocity.x, 0);
-        _rb.AddForce(Vector2.up * _stats.JumpHeight, ForceMode2D.Impulse);
+        if (_currentJumps < _stats.MaxJumps - 1)
+        {
+            _rb.velocity = new Vector2(_rb.velocity.x, 0);
+            _rb.AddForce(Vector2.up * _stats.JumpHeight, ForceMode2D.Impulse);
+            _currentJumps++;
+        }
     }
 
     private void OnDash(InputAction.CallbackContext context)
     {
-
+        _rb.velocity = Vector2.zero;
+        _currentJumps--;
     }
     #endregion
+
+    private void ResetVelocity()
+    {
+        if (_rb.velocity.magnitude <= 0.01f)
+        {
+            _rb.velocity = Vector2.zero;
+        }
+    }
+
+    private void ResetJumps()
+    {
+        if (IsGrounded())
+        {
+            _currentJumps = 0;
+        }
+    }
 
     private void AddPlayerForce()
     {
@@ -63,7 +88,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void AddGravityForce()
     {
-        if (!IsGrounded())
+        if (!IsGrounded() && _addGravity)
         {
             _rb.AddForce(_gravityDirection * _gravityScale, ForceMode2D.Force);
         }
@@ -71,7 +96,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private bool IsGrounded()
     {
-        if (Physics.Raycast(transform.position, _gravityDirection, transform.localScale.x / 2, LayerMask.GetMask("Ground")))
+        if (Physics2D.Raycast(transform.position, _gravityDirection, transform.localScale.x + 0.05f, LayerMask.GetMask("Ground")))
         {
             return true;
         }
