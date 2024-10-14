@@ -35,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
         ResetJumps();
         AddPlayerForce();
         AddGravityForce();
+        print(_stats.CurrentHealth);
     }
 
     #region InputMessages
