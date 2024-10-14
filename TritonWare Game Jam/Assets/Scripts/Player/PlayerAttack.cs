@@ -18,7 +18,7 @@ public class PlayerAttack : MonoBehaviour
         _inputMap = GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player");
         _inputMap["Attack"].performed += OnAttack;
 
-        _bulletPrefab = Resources.Load<GameObject>("Prefabs/PlayerBullet");
+        _bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
     }
 
     private void FixedUpdate()
