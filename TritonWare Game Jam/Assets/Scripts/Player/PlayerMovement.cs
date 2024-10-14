@@ -13,7 +13,6 @@ public class PlayerMovement : MonoBehaviour
 
     private float _inputDirection;
     private int _currentJumps = 0;
-    
 
     private Vector3 _gravityDirection = Vector3.down;
     private float _gravityScale = 30;
