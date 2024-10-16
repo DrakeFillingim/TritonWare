@@ -64,7 +64,7 @@ MonoBehaviour:
   - {fileID: -4048133512031920920}
   StringsBanks:
   - {fileID: -3728682252218741323}
-  cacheTime: 638645464047167099
+  cacheTime: 638646203679028657
   cacheVersion: 131620
 --- !u!114 &542350866894754855
 MonoBehaviour:
@@ -81,10 +81,10 @@ MonoBehaviour:
   Path: ../../../FMOD Studio/TritonWareGameJam/TritonsDomain/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638645464047167099
+  lastModified: 638646203679028657
   FileSizes:
   - Name: Desktop
-    Value: 1081216
+    Value: 985952
   Exists: 1
 --- !u!114 &6471412179043973057
 MonoBehaviour:
@@ -139,4 +139,4 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 48000
+  Length: 40000
