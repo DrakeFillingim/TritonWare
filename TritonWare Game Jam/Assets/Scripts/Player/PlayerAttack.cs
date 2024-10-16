@@ -3,6 +3,9 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
 {
+    private const float AttackAngle = 10;
+    private const int EvenStartAngle = -5;
+
     private InputActionMap _inputMap;
     private GameObject _bulletPrefab;
 
@@ -18,7 +21,7 @@ public class PlayerAttack : MonoBehaviour
         _inputMap = GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player");
         _inputMap["Attack"].performed += OnAttack;
 
-        _bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
+        _bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");        
     }
 
     private void FixedUpdate()
@@ -31,14 +34,31 @@ public class PlayerAttack : MonoBehaviour
 
     private void OnAttack(InputAction.CallbackContext context)
     {
-        if (context.control.IsActuated() && _stats.CurrentAmmo > 0)
+        if (context.control.IsActuated())
         {
-            GameObject firedBullet = Instantiate(_bulletPrefab);
-            firedBullet.transform.parent = null;
-            firedBullet.transform.position = transform.position;
-            ProjectileController controller = firedBullet.AddComponent<ProjectileController>();
-            controller.Initialize(new Vector2(Mathf.Sign(_previousVelocity.x), 0), 20 * Time.fixedDeltaTime);
-            _stats.CurrentAmmo--;
+            float currentAngle = 0;
+            if (_stats.BulletsFired % 2 == 0)
+            {
+                currentAngle = EvenStartAngle;
+            }
+            for (int i = 0; i < _stats.BulletsFired; i++)
+            {
+                if (_stats.CurrentAmmo > 0)
+                {
+                    float addBy = AttackAngle * i;
+                    if (i % 2 == 0)
+                    {
+                        addBy *= -1;
+                    }
+                    currentAngle += addBy;
+                    GameObject firedBullet = Instantiate(_bulletPrefab);
+                    firedBullet.transform.parent = null;
+                    firedBullet.transform.position = transform.position;
+                    ProjectileController controller = firedBullet.AddComponent<ProjectileController>();
+                    controller.Initialize(Mathf.Sign(_previousVelocity.x) * new Vector2(Mathf.Sin(currentAngle * Mathf.Deg2Rad), Mathf.Cos(currentAngle * Mathf.Deg2Rad)).normalized, 20 * Time.fixedDeltaTime);
+                    _stats.CurrentAmmo--;
+                }
+            }
         }
     }
 }

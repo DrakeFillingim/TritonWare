@@ -16,6 +16,6 @@ public class PickupHandler : MonoBehaviour
         GameObject pickup = Instantiate(_pickupPrefab);
         pickup.transform.position = new Vector3(0, 1, 0);
         Pickup controller = pickup.AddComponent<Pickup>();
-        controller.Initialize("WalkSpeed", 5);
+        controller.Initialize("BulletsFired", 1);
     }
 }

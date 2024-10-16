@@ -2,17 +2,16 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour
 {
-    private Vector2 _direction;
     private float _speed;
 
     public void Initialize(Vector2 direction, float speed)
     {
-        _direction = direction;
+        transform.rotation = Quaternion.Euler(direction.x * Mathf.Rad2Deg, direction.y * Mathf.Rad2Deg, 0);
         _speed = speed;
     }
 
     private void FixedUpdate()
     {
-        transform.position += new Vector3(_direction.x * _speed, _direction.y * _speed, 0);
+        transform.position += transform.forward * _speed;
     }
 }
