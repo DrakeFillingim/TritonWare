@@ -42,8 +42,10 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext context)
     {
+       
         _rb.velocity = new Vector2(_rb.velocity.x, 0);
         _rb.AddForce(Vector2.up * _stats.JumpHeight, ForceMode2D.Impulse);
+
     }
 
     private void OnDash(InputAction.CallbackContext context)
