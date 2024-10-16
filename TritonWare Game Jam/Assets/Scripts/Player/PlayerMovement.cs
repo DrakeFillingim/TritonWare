@@ -13,9 +13,24 @@ public partial class PlayerMovement : MonoBehaviour
 
     private float _inputDirection;
 
+    private Timer _startCheckCooldown;
+    private bool _checkJumps = true;
+    private float _checkJumpCooldown = .1f;
+    private int _currentJumps = 0;
+
     private Vector3 _gravityDirection = Vector3.down;
     private float _gravityScale = 30;
-    private bool _addGravity;
+    private bool _addGravity = true;
+
+    private Timer _isDashing;
+    private Timer _dashRecharge;
+    private float _dashSpeed = 20;
+    private float _dashTime = .25f;
+    private float _dashCooldown = 3;
+    private bool _canDash = true;
+    private Vector2 _dashDirection = Vector2.right;
+
+    private System.Action _currentMovement;
 
     private void Start()
     {
@@ -26,11 +41,20 @@ public partial class PlayerMovement : MonoBehaviour
 
         _rb = GetComponent<Rigidbody2D>();
         _stats = GetComponent<PlayerStats>();
+
+        _startCheckCooldown = Timer.CreateTimer(gameObject, () => _checkJumps = true, _checkJumpCooldown);
+
+        _isDashing = Timer.CreateTimer(gameObject, OnDashExit, _dashTime);
+        _dashRecharge = Timer.CreateTimer(gameObject, () => _canDash = true, _dashCooldown);
+
+        _currentMovement = AddPlayerForce;
     }
 
     private void FixedUpdate()
     {
-        AddPlayerForce();
+        ResetVelocity();
+        ResetJumps();
+        _currentMovement();
         AddGravityForce();
     }
 
@@ -42,17 +66,53 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void OnJump(InputAction.CallbackContext context)
     {
-       
-        _rb.velocity = new Vector2(_rb.velocity.x, 0);
-        _rb.AddForce(Vector2.up * _stats.JumpHeight, ForceMode2D.Impulse);
-
+        if (_currentJumps < _stats.MaxJumps)
+        {
+            _rb.velocity = new Vector2(_rb.velocity.x, 0);
+            _rb.AddForce(Vector2.up * _stats.JumpHeight, ForceMode2D.Impulse);
+            _currentJumps++;
+            _checkJumps = false;
+            _startCheckCooldown.Start();
+        }
     }
 
     private void OnDash(InputAction.CallbackContext context)
     {
-
+        if (context.control.IsActuated() && _canDash)
+        {
+            Vector2 toMouse = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
+            _dashDirection = (toMouse - new Vector2(transform.position.x, transform.position.z)).normalized;
+            _isDashing.Start();
+            _addGravity = false;
+            _currentMovement = AddDashForce;
+            _canDash = false;
+        }
     }
     #endregion
+
+    private void OnDashExit()
+    {
+        _dashRecharge.Start();
+        _addGravity = true;
+        _currentMovement = AddPlayerForce;
+        _rb.velocity = new Vector2(_rb.velocity.x, 0);
+    }
+
+    private void ResetVelocity()
+    {
+        if (_rb.velocity.magnitude <= 0.01f)
+        {
+            _rb.velocity = Vector2.zero;
+        }
+    }
+
+    private void ResetJumps()
+    {
+        if (IsGrounded() && _checkJumps)
+        {
+            _currentJumps = 0;
+        }
+    }
 
     private void AddPlayerForce()
     {
@@ -63,9 +123,14 @@ public partial class PlayerMovement : MonoBehaviour
         _rb.AddForce(Vector2.right * movement, ForceMode2D.Force);
     }
 
+    private void AddDashForce()
+    {
+        _rb.AddForce((_dashDirection * _dashSpeed) / _dashTime, ForceMode2D.Force);
+    }
+
     private void AddGravityForce()
     {
-        if (!IsGrounded())
+        if (!IsGrounded() && _addGravity)
         {
             _rb.AddForce(_gravityDirection * _gravityScale, ForceMode2D.Force);
         }
@@ -73,7 +138,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private bool IsGrounded()
     {
-        if (Physics.Raycast(transform.position, _gravityDirection, transform.localScale.x / 2, LayerMask.GetMask("Ground")))
+        if (Physics2D.Raycast(transform.position, _gravityDirection, transform.localScale.x / 2 + 0.05f, LayerMask.GetMask("Ground")))
         {
             return true;
         }
