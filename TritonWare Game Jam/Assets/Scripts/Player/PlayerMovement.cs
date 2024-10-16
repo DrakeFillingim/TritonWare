@@ -24,9 +24,9 @@ public partial class PlayerMovement : MonoBehaviour
 
     private Timer _isDashing;
     private Timer _dashRecharge;
-    private float _dashSpeed = 20;
+    private float _dashSpeed = 5;
     private float _dashTime = .25f;
-    private float _dashCooldown = 3;
+    private float _dashCooldown = 1.5f;
     private bool _canDash = true;
     private Vector2 _dashDirection = Vector2.right;
 
@@ -86,6 +86,7 @@ public partial class PlayerMovement : MonoBehaviour
             _addGravity = false;
             _currentMovement = AddDashForce;
             _canDash = false;
+            _rb.velocity = Vector2.zero;
         }
     }
     #endregion
@@ -125,7 +126,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void AddDashForce()
     {
-        _rb.AddForce((_dashDirection * _dashSpeed) / _dashTime, ForceMode2D.Force);
+        _rb.velocity = (_dashDirection * _dashSpeed) / _dashTime;
     }
 
     private void AddGravityForce()
