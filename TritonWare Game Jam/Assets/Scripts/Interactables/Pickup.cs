@@ -24,6 +24,7 @@ public class Pickup : MonoBehaviour
                 Type propertyType = info.GetValue(stats).GetType();
                 float value = (float)Convert.ChangeType(info.GetValue(stats), typeof(float));
                 info.SetValue(stats, Convert.ChangeType(value + _changeBy, propertyType));
+                print(_statToChange);
             }
             else
             {

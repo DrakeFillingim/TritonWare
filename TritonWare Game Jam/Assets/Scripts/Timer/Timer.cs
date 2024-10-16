@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Timer : MonoBehaviour
 {
-    public float MaxTime { get; set; }
+    public float MaxTime { get; set; } = 1;
     public float CurrentTime { get; set; } = 0;
-    public bool Autostart { get; set; }
-    public bool Repeatable { get; set; }
+    public bool Autostart { get; set; } = false;
+    public bool Repeatable { get; set; } = true;
 
     public System.Action onTimeout;
 
@@ -31,6 +31,7 @@ public class Timer : MonoBehaviour
         CurrentTime += Time.deltaTime;
         if (CurrentTime >= MaxTime)
         {
+            print("timeout");
             onTimeout();
 
             if (Repeatable)
