@@ -100,7 +100,7 @@ public class PlayerMovement : MonoBehaviour
         _addGravity = true;
         _currentMotion = AddPlayerForce;
         _dashRecharge.Start();
-        _rb.velocity = new Vector2(_rb.velocity.x, 0);
+        _rb.velocity = _dashSpeed * _dashTime * _dashDirection;
     }
 
     private void ResetVelocity()
@@ -145,7 +145,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Physics2D.Raycast(transform.position, _gravityDirection, (transform.localScale.x / 2) + 0.05f, LayerMask.GetMask("Ground")))
         {
-            print("true");
             return true;
         }
         return false;

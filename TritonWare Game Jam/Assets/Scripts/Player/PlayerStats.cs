@@ -14,4 +14,6 @@ public class PlayerStats : MonoBehaviour
 
     public int MaxAmmo { get; set; } = StartingAmmo;
     public int CurrentAmmo { get; set; } = StartingAmmo;
+
+    public int BulletsFired { get; set; } = 1;
 }

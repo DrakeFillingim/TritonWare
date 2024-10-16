@@ -3,6 +3,8 @@ using UnityEngine.InputSystem;
 
 public class PlayerAttack : MonoBehaviour
 {
+    private const float FireAngle = 10;
+
     private InputActionMap _inputMap;
     private GameObject _bulletPrefab;
 
@@ -33,12 +35,21 @@ public class PlayerAttack : MonoBehaviour
     {
         if (context.control.IsActuated() && _stats.CurrentAmmo > 0)
         {
-            GameObject firedBullet = Instantiate(_bulletPrefab);
-            firedBullet.transform.parent = null;
-            firedBullet.transform.position = transform.position;
-            ProjectileController controller = firedBullet.AddComponent<ProjectileController>();
-            controller.Initialize(new Vector2(Mathf.Sign(_previousVelocity.x), 0), 20 * Time.fixedDeltaTime);
-            _stats.CurrentAmmo--;
+            int currentAngle = 0;
+            for (int i = 0; i < _stats.BulletsFired; i++)
+            {
+                if (i % 2 == 0 && i != 0)
+                {
+                    currentAngle += 10;
+                }
+                GameObject firedBullet = Instantiate(_bulletPrefab);
+                firedBullet.transform.parent = null;
+                firedBullet.transform.position = transform.position;
+                firedBullet.transform.rotation = Quaternion.Euler(currentAngle, 0, 0);
+                ProjectileController controller = firedBullet.AddComponent<ProjectileController>();
+                controller.Initialize(new Vector2(Mathf.Sign(_previousVelocity.x), 0), 20 * Time.fixedDeltaTime);
+                _stats.CurrentAmmo--;
+            }
         }
     }
 }
