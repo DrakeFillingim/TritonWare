@@ -7,7 +7,7 @@ public class PlayerStats : MonoBehaviour, IEntityStats
 
     public int MaxHealth { get; set; } = StartingHealth;
 
-    private int _currentHealth = StartingHealth;
+    public int _currentHealth = StartingHealth;
     public int CurrentHealth {
         get => _currentHealth;
         set
