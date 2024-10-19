@@ -7,7 +7,6 @@ public class PlayerAttack : MonoBehaviour
     private const int EvenStartAngle = -5;
 
     private InputActionMap _inputMap;
-    private GameObject _bulletPrefab;
     private Sprite _bulletSprite;
 
     private Rigidbody2D _rb;
@@ -22,7 +21,6 @@ public class PlayerAttack : MonoBehaviour
         _inputMap = GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player");
         _inputMap["Attack"].performed += OnAttack;
 
-        _bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
         _bulletSprite = Resources.Load<Sprite>("Sprites/PlayerBullet");
     }
 
@@ -44,25 +42,17 @@ public class PlayerAttack : MonoBehaviour
                 bulletsToFire = _stats.CurrentAmmo;
             }
 
-            float currentAngle = 0;
+            float startingAngle = 0;
             if (bulletsToFire % 2 == 0)
             {
-                currentAngle = EvenStartAngle;
+                startingAngle = EvenStartAngle;
             }
-            for (int i = 0; i < bulletsToFire; i++)
+            if (_previousVelocity.x < 0)
             {
-                float addBy = AttackAngle * i;
-                if (i % 2 == 0)
-                {
-                    addBy *= -1;
-                }
-                currentAngle += addBy;
-                GameObject firedBullet = Instantiate(_bulletPrefab, transform);
-                ProjectileController controller = firedBullet.AddComponent<ProjectileController>();
-                controller.Initialize(Mathf.Sign(_previousVelocity.x) * new Vector2(Mathf.Cos(currentAngle * Mathf.Deg2Rad), Mathf.Sin(currentAngle * Mathf.Deg2Rad)).normalized, 20 * Time.fixedDeltaTime, _bulletSprite);
-                _stats.CurrentAmmo--;
-
+                startingAngle += 180;
             }
+            ProjectileController.ShootBullet(bulletsToFire, startingAngle, AttackAngle, transform, _bulletSprite);
+            _stats.CurrentAmmo -= bulletsToFire;
         }
     }
 }

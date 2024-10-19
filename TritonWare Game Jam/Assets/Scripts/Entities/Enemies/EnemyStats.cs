@@ -25,5 +25,5 @@ public class EnemyStats : MonoBehaviour, IEntityStats
     }
 
     public float WalkSpeed { get; set; } = 5;
-    public int BulletsFired { get; set; } = 5;
+    public int BulletsFired { get; set; } = 2;
 }

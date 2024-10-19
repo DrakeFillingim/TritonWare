@@ -6,7 +6,24 @@ public class ProjectileController : MonoBehaviour
     private float _speed;
     private Transform _root;
 
+    private static GameObject _bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
 
+    public static void ShootBullet(int bulletsToShoot, float startingAngle, float angleChange, Transform parent, Sprite icon)
+    {
+        float currentAngle = startingAngle;
+        for (int i = 0; i < bulletsToShoot; i++)
+        {
+            float addBy = angleChange * i;
+            if (i % 2 == 0)
+            {
+                addBy *= -1;
+            }
+            currentAngle += addBy;
+            GameObject firedBullet = Instantiate(_bulletPrefab, parent);
+            ProjectileController controller = firedBullet.AddComponent<ProjectileController>();
+            controller.Initialize(new Vector2(Mathf.Cos(currentAngle * Mathf.Deg2Rad), Mathf.Sin(currentAngle * Mathf.Deg2Rad)).normalized, 20 * Time.fixedDeltaTime, icon);
+        }
+    }
 
     public void Initialize(Vector2 direction, float speed, Sprite icon)
     {
