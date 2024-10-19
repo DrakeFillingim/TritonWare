@@ -11,7 +11,7 @@ public class PickupHandler : MonoBehaviour
     private GameObject _pickupPrefab;
     private float _xMin;
     private float _xMax;
-    private float _yValue;
+    private float _yValue = -1;
 
     private Dictionary<string, PowerupStats> powerupValues;
 
@@ -20,7 +20,6 @@ public class PickupHandler : MonoBehaviour
         Tilemap map = GameObject.Find("Grid/Tilemap").GetComponent<Tilemap>();
         _xMin = map.transform.TransformPoint(map.localBounds.min).x;
         _xMax = map.transform.TransformPoint(map.localBounds.max).x;
-        _yValue = map.transform.TransformPoint(map.localBounds.max).y - 1;
 
         _pickupPrefab = Resources.Load<GameObject>("Prefabs/Pickup");
         Timer.CreateTimer(gameObject, CreatePickup, PowerupCooldown, true);

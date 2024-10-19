@@ -5,6 +5,7 @@ public partial class PlayerMovement : MonoBehaviour
 {
     private const float Acceleration = .2f;
     private const float Deceleration = .1f;
+    private const int DashAmmo = 5;
 
     private InputActionMap _inputMap;
 
@@ -18,8 +19,8 @@ public partial class PlayerMovement : MonoBehaviour
     private float _checkJumpCooldown = .1f;
     private int _currentJumps = 0;
 
-    private Vector3 _gravityDirection = Vector3.down;
-    private float _gravityScale = 30;
+    private Vector2 _gravityDirection = Vector2.down;
+    private float _gravityScale = 37;
     private bool _addGravity = true;
 
     private Timer _isDashing;
@@ -41,6 +42,7 @@ public partial class PlayerMovement : MonoBehaviour
         _inputMap["Pause"].performed += _ => Debug.Break();
 
         _rb = GetComponent<Rigidbody2D>();
+        _rb.freezeRotation = true;
         _stats = GetComponent<PlayerStats>();
 
         _startCheckCooldown = Timer.CreateTimer(gameObject, () => _checkJumps = true, _checkJumpCooldown);
@@ -88,6 +90,10 @@ public partial class PlayerMovement : MonoBehaviour
             _currentMovement = AddDashForce;
             _canDash = false;
             _rb.velocity = Vector2.zero;
+            if (_currentJumps > 0)
+            {
+                _currentJumps--;
+            }
         }
     }
     #endregion
@@ -98,6 +104,7 @@ public partial class PlayerMovement : MonoBehaviour
         _addGravity = true;
         _currentMovement = AddPlayerForce;
         _rb.velocity = new Vector2(_rb.velocity.x, 0);
+        _stats.CurrentAmmo += DashAmmo;
     }
 
     private void ResetVelocity()
