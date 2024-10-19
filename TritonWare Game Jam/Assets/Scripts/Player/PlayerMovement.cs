@@ -38,6 +38,7 @@ public partial class PlayerMovement : MonoBehaviour
         _inputMap["Move"].performed += OnMove;
         _inputMap["Jump"].performed += OnJump;
         _inputMap["Dash"].performed += OnDash;
+        _inputMap["Pause"].performed += _ => Debug.Break();
 
         _rb = GetComponent<Rigidbody2D>();
         _stats = GetComponent<PlayerStats>();

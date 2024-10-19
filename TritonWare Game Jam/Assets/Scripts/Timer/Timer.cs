@@ -31,7 +31,6 @@ public class Timer : MonoBehaviour
         CurrentTime += Time.deltaTime;
         if (CurrentTime >= MaxTime)
         {
-            print("timeout");
             onTimeout();
 
             if (Repeatable)
