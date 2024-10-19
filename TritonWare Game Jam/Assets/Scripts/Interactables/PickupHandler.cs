@@ -1,17 +1,19 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Reflection;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PickupHandler : MonoBehaviour
 {
-    private const float PowerupCooldown = 3;
+    private const float PowerupCooldown = 10;
 
     private GameObject _pickupPrefab;
     private float _xMin;
     private float _xMax;
     private float _yValue;
 
-    private string[] _powerupNames = new string[8];
+    private Dictionary<string, PowerupStats> powerupValues;
 
     private void Start()
     {
@@ -23,12 +25,13 @@ public class PickupHandler : MonoBehaviour
         _pickupPrefab = Resources.Load<GameObject>("Prefabs/Pickup");
         Timer.CreateTimer(gameObject, CreatePickup, PowerupCooldown, true);
 
-        int i = 0;
-        foreach (PropertyInfo p in typeof(PlayerStats).GetProperties()[0..8])
+        powerupValues = new Dictionary<string, PowerupStats>()
         {
-            _powerupNames[i] = p.Name;
-            i++;
-        }
+            {"CurrentAmmo", new PowerupStats(10, 0, Resources.Load<Sprite>("Sprites/PlayerBullet")) },
+            {"WalkSpeed", new PowerupStats(7.5f, 5, Resources.Load<Sprite>("Sprites/SpeedupBoost"))},
+            {"BulletsFired", new PowerupStats(2, 5, Resources.Load<Sprite>("Sprites/Shoot3Bullets")) },
+            {"CurrentHealth", new PowerupStats(1, 0, Resources.Load<Sprite>("Sprites/Plus1Heart")) }
+        };
     }
 
     private void CreatePickup()
@@ -37,6 +40,21 @@ public class PickupHandler : MonoBehaviour
         float xSpawn = Random.Range(_xMin, _xMax);
         pickup.transform.position = new Vector3(xSpawn, _yValue, 0);
         Pickup controller = pickup.AddComponent<Pickup>();
-        controller.Initialize(_powerupNames[Random.Range(0, _powerupNames.Length - 1)], Random.Range(1, 5));
+        string powerupName = powerupValues.Keys.ToArray()[Random.Range(0, powerupValues.Keys.Count)];
+        controller.Initialize(powerupName, powerupValues[powerupName]);
+    }
+}
+
+public class PowerupStats
+{
+    public float Amount { get; set; } = 0;
+    public float Duration { get; set; } = 0;
+    public Sprite Icon { get; set; }
+
+    public PowerupStats(float amount, float duration, Sprite icon)
+    {
+        Amount = amount;
+        Duration = duration;
+        Icon = icon;
     }
 }
