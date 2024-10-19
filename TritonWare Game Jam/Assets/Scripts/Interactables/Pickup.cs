@@ -11,17 +11,28 @@ public class Pickup : MonoBehaviour
 
     private PlayerStats _affectedPlayer;
 
+    private float _startY;
+    private float _startTime;
+
     public void Initialize(string statToChange, PowerupStats infoStats)
     {
         _statToChange = statToChange;
         _changeBy = infoStats.Amount;
         _duration = infoStats.Duration;
 
+        gameObject.layer = 9;
         SpriteRenderer renderer = GetComponent<SpriteRenderer>();
         renderer.sprite = infoStats.Icon;
-        transform.localScale = new Vector3(.5f, .5f, .5f);
+        transform.localScale = new Vector3(.4f, .4f, .4f);
         Collider2D collider = gameObject.AddComponent<BoxCollider2D>();
         collider.isTrigger = true;
+        _startY = transform.position.y;
+        _startTime = Time.time;
+    }
+
+    private void FixedUpdate()
+    {
+        transform.position = new Vector3(transform.position.x, _startY + Mathf.Sin((Time.time - _startTime) * 3) / 4, transform.position.z);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

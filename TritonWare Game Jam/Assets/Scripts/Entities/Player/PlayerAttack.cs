@@ -38,27 +38,30 @@ public class PlayerAttack : MonoBehaviour
     {
         if (context.control.IsActuated())
         {
+            int bulletsToFire = _stats.BulletsFired;
+            if (bulletsToFire > _stats.CurrentAmmo)
+            {
+                bulletsToFire = _stats.CurrentAmmo;
+            }
+
             float currentAngle = 0;
-            if (_stats.BulletsFired % 2 == 0)
+            if (bulletsToFire % 2 == 0)
             {
                 currentAngle = EvenStartAngle;
             }
-            for (int i = 0; i < _stats.BulletsFired; i++)
+            for (int i = 0; i < bulletsToFire; i++)
             {
-                if (_stats.CurrentAmmo > 0)
+                float addBy = AttackAngle * i;
+                if (i % 2 == 0)
                 {
-                    float addBy = AttackAngle * i;
-                    if (i % 2 == 0)
-                    {
-                        addBy *= -1;
-                    }
-                    currentAngle += addBy;
-                    GameObject firedBullet = Instantiate(_bulletPrefab, transform);
-                    ProjectileController controller = firedBullet.AddComponent<ProjectileController>();
-                    print("angel: " + currentAngle + "\n: " + Mathf.Sign(_previousVelocity.x) * new Vector2(Mathf.Sin(currentAngle * Mathf.Deg2Rad), Mathf.Cos(currentAngle * Mathf.Deg2Rad)).normalized);
-                    controller.Initialize(Mathf.Sign(_previousVelocity.x) * new Vector2(Mathf.Sin(currentAngle * Mathf.Deg2Rad), Mathf.Cos(currentAngle * Mathf.Deg2Rad)).normalized, 20 * Time.fixedDeltaTime, _bulletSprite);
-                    _stats.CurrentAmmo--;
+                    addBy *= -1;
                 }
+                currentAngle += addBy;
+                GameObject firedBullet = Instantiate(_bulletPrefab, transform);
+                ProjectileController controller = firedBullet.AddComponent<ProjectileController>();
+                controller.Initialize(Mathf.Sign(_previousVelocity.x) * new Vector2(Mathf.Cos(currentAngle * Mathf.Deg2Rad), Mathf.Sin(currentAngle * Mathf.Deg2Rad)).normalized, 20 * Time.fixedDeltaTime, _bulletSprite);
+                _stats.CurrentAmmo--;
+
             }
         }
     }

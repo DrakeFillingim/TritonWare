@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlayerStats : MonoBehaviour
+public class PlayerStats : MonoBehaviour, IEntityStats
 {
     private const int StartingHealth = 3;
     private const int StartingAmmo = 15;
@@ -38,5 +38,5 @@ public class PlayerStats : MonoBehaviour
     public float WalkSpeed { get; set; } = 5;
     public int MaxJumps { get; set; } = 2;
     public float JumpHeight { get; set; } = 15;
-    public int BulletsFired { get; set; } = 3;
+    public int BulletsFired { get; set; } = 1;
 }
