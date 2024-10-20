@@ -1,6 +1,7 @@
 public class SelectorNode : Node
 {
     private Node[] childNodes;
+    private int _runningNode = 0;
 
     public SelectorNode(Node[] childNodes_)
     {
@@ -9,16 +10,19 @@ public class SelectorNode : Node
 
     public override NodeStates Evaluate()
     {
-        foreach (Node node in childNodes)
+        for (int i = _runningNode; i < childNodes.Length; i++)
         {
-            switch (node.Evaluate())
+            switch (childNodes[i].Evaluate())
             {
                 case NodeStates.Failure:
+                    _runningNode = 0;
                     continue;
                 case NodeStates.Running:
+                    _runningNode = i;
                     nodeState = NodeStates.Running;
                     return nodeState;
                 case NodeStates.Success:
+                    _runningNode = 0;
                     nodeState = NodeStates.Success;
                     return nodeState;
             }

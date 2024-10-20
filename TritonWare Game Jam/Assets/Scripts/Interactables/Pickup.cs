@@ -32,7 +32,7 @@ public class Pickup : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position = new Vector3(transform.position.x, _startY + Mathf.Sin((Time.time - _startTime) * 3) / 4, transform.position.z);
+        transform.position = new Vector3(transform.position.x, _startY + Mathf.Sin((Time.time - _startTime) * 2.5f) / 4, transform.position.z);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

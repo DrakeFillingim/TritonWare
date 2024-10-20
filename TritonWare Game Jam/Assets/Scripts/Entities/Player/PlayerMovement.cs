@@ -75,7 +75,7 @@ public partial class PlayerMovement : MonoBehaviour
             _rb.AddForce(Vector2.up * _stats.JumpHeight, ForceMode2D.Impulse);
             _currentJumps++;
             _checkJumps = false;
-            _startCheckCooldown.Start();
+            _startCheckCooldown.StartTimer();
         }
     }
 
@@ -85,7 +85,7 @@ public partial class PlayerMovement : MonoBehaviour
         {
             Vector2 toMouse = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
             _dashDirection = (toMouse - new Vector2(transform.position.x, transform.position.z)).normalized;
-            _isDashing.Start();
+            _isDashing.StartTimer();
             _addGravity = false;
             _currentMovement = AddDashForce;
             _canDash = false;
@@ -100,7 +100,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void OnDashExit()
     {
-        _dashRecharge.Start();
+        _dashRecharge.StartTimer();
         _addGravity = true;
         _currentMovement = AddPlayerForce;
         _rb.velocity = new Vector2(_rb.velocity.x, 0);
