@@ -4,6 +4,8 @@ public class EnemyController : MonoBehaviour
 {
     private const float AttackAngle = 5;
 
+    private GameObject _waveAttack;
+    private Sprite _waveSprite;
     private Sprite _bulletSprite;
     private Transform _player;
 
@@ -25,12 +27,14 @@ public class EnemyController : MonoBehaviour
 
     private Timer _waveTimer;
     private bool _startWaveTimer = true;
-    private float _waveDuration = 2;
+    private float _waveDuration = 5;
 
     private EnemyStats _stats;
 
     private void Start()
     {
+        _waveSprite = Resources.Load<Sprite>("Sprites/WaveAttack");
+        print(_waveAttack);
         _bulletSprite = Resources.Load<Sprite>("Sprites/KingTritonProjectile");
         _player = GameObject.Find("Player").transform;
 
@@ -84,7 +88,7 @@ public class EnemyController : MonoBehaviour
     private Node.NodeStates FireBullet()
     {
         Vector3 toPlayer = _player.position - transform.position;
-        ProjectileController.ShootBullet(_stats.BulletsFired, Mathf.Atan2(toPlayer.y, toPlayer.x) * Mathf.Rad2Deg, AttackAngle, transform, _bulletSprite);
+        ProjectileController.ShootBullet(_stats.BulletsFired, Mathf.Atan2(toPlayer.y, toPlayer.x) * Mathf.Rad2Deg, AttackAngle, transform, _bulletSprite, transform.position, 20, true);
         _canAttack = false;
         _attackTimer.StartTimer();
         return Node.NodeStates.Success;
@@ -105,10 +109,21 @@ public class EnemyController : MonoBehaviour
         {
             _waveTimer.StartTimer();
             _canWave = false;
+
+            int angle = 0;
+            if (_player.position.x < transform.position.x)
+            {
+                angle = 180;
+            }
+            GameObject waveAttack = ProjectileController.ShootBullet(1, angle, 0, transform, _waveSprite, new Vector2(transform.position.x, -1.25f), 5, false)[0];
+            if (_player.position.x < transform.position.x)
+            {
+                waveAttack.GetComponent<SpriteRenderer>().flipY = true;
+            }
+            waveAttack.GetComponent<SpriteRenderer>().flipX = true;
         }
         if (_waveTimer.enabled)
         {
-            print("wave attacking ");
             _startWaveTimer = false;
             return Node.NodeStates.Running;
         }
