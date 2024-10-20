@@ -1,15 +1,18 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class ProjectileController : MonoBehaviour
 {
     private Vector2 _direction;
     private float _speed;
     private Transform _root;
+    private bool _destroyOnCollide = true;
 
     private static GameObject _bulletPrefab = Resources.Load<GameObject>("Prefabs/Bullet");
 
-    public static void ShootBullet(int bulletsToShoot, float startingAngle, float angleChange, Transform parent, Sprite icon)
+    public static GameObject[] ShootBullet(int bulletsToShoot, float startingAngle, float angleChange, Transform parent, Sprite icon, Vector2 startPosition, float speed, bool destroyOnCollide)
     {
+        List<GameObject> bulletsFired = new List<GameObject>();
         float currentAngle = startingAngle;
         for (int i = 0; i < bulletsToShoot; i++)
         {
@@ -21,18 +24,22 @@ public class ProjectileController : MonoBehaviour
             currentAngle += addBy;
             GameObject firedBullet = Instantiate(_bulletPrefab, parent);
             ProjectileController controller = firedBullet.AddComponent<ProjectileController>();
-            controller.Initialize(new Vector2(Mathf.Cos(currentAngle * Mathf.Deg2Rad), Mathf.Sin(currentAngle * Mathf.Deg2Rad)).normalized, 20 * Time.fixedDeltaTime, icon);
+            controller.Initialize(new Vector2(Mathf.Cos(currentAngle * Mathf.Deg2Rad), Mathf.Sin(currentAngle * Mathf.Deg2Rad)).normalized, speed * Time.fixedDeltaTime, icon, destroyOnCollide);
+            firedBullet.transform.parent = null;
+            firedBullet.transform.position = startPosition;
+            bulletsFired.Add(firedBullet);
         }
+        return bulletsFired.ToArray();
     }
 
-    public void Initialize(Vector2 direction, float speed, Sprite icon)
+    public void Initialize(Vector2 direction, float speed, Sprite icon, bool destroyOnCollide)
     {
         GetComponent<SpriteRenderer>().sprite = icon;
         _root = transform.parent;
-        transform.parent = null;
         _direction = direction;
         transform.rotation = Quaternion.Euler(0, 0, Mathf.Atan2(_direction.y, _direction.x) * Mathf.Rad2Deg);
         _speed = speed;
+        _destroyOnCollide = destroyOnCollide;
 
         Collider2D collider = gameObject.AddComponent<BoxCollider2D>();
         collider.isTrigger = true;
@@ -57,13 +64,19 @@ public class ProjectileController : MonoBehaviour
     {
         if (collision.transform != _root)
         {
-            //print("collision: " + collision + "root: " + _root);
             IEntityStats stats = collision.GetComponent<IEntityStats>();
             if (stats != null)
             {
                 stats.CurrentHealth--;
+                if (_destroyOnCollide)
+                {
+                    Destroy(gameObject);
+                }
             }
-            Destroy(gameObject);
+            else
+            {
+                Destroy(gameObject);
+            }
         }
         
     }

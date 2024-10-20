@@ -51,7 +51,7 @@ public class PlayerAttack : MonoBehaviour
             {
                 startingAngle += 180;
             }
-            ProjectileController.ShootBullet(bulletsToFire, startingAngle, AttackAngle, transform, _bulletSprite);
+            ProjectileController.ShootBullet(bulletsToFire, startingAngle, AttackAngle, transform, _bulletSprite, transform.position, 20, true);
             _stats.CurrentAmmo -= bulletsToFire;
         }
     }
