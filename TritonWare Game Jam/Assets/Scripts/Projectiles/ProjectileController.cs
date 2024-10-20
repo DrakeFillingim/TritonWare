@@ -57,7 +57,7 @@ public class ProjectileController : MonoBehaviour
     {
         if (collision.transform != _root)
         {
-            print("collision: " + collision + "root: " + _root);
+            //print("collision: " + collision + "root: " + _root);
             IEntityStats stats = collision.GetComponent<IEntityStats>();
             if (stats != null)
             {

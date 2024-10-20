@@ -5,7 +5,7 @@ using System.Linq;
 
 public class PickupHandler : MonoBehaviour
 {
-    private const float PowerupCooldown = 10;
+    private const float PowerupCooldown = 2;
 
     private GameObject _pickupPrefab;
     private float _xMin;

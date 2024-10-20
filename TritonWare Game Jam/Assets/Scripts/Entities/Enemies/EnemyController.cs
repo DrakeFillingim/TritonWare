@@ -19,6 +19,14 @@ public class EnemyController : MonoBehaviour
     private float _moveDistance = -20;
     private float _startX;
 
+    private bool _canWave = true;
+    private Timer _waveRecharge;
+    private float _waveCooldown = 5;
+
+    private Timer _waveTimer;
+    private bool _startWaveTimer = true;
+    private float _waveDuration = 2;
+
     private EnemyStats _stats;
 
     private void Start()
@@ -34,12 +42,16 @@ public class EnemyController : MonoBehaviour
                 }))
             }),
             new SequencerNode(new Node[] {
-                new LeafNode(Move)
-            })
+                new LeafNode(CanWaveAttack),
+                new LeafNode(WaveAttack)
+            }),
+            new LeafNode(Move)
         });
 
         _attackTimer = Timer.CreateTimer(gameObject, () => _canAttack = true, _attackCooldown);
         _movementTimer = Timer.CreateTimer(gameObject, () => { }, _moveDuration);
+        _waveRecharge = Timer.CreateTimer(gameObject, () => _canWave = true, _waveCooldown);
+        _waveTimer = Timer.CreateTimer(gameObject, () => { }, _waveDuration);
         _startX = transform.position.x;
 
         _stats = GetComponent<EnemyStats>();
@@ -75,6 +87,33 @@ public class EnemyController : MonoBehaviour
         ProjectileController.ShootBullet(_stats.BulletsFired, Mathf.Atan2(toPlayer.y, toPlayer.x) * Mathf.Rad2Deg, AttackAngle, transform, _bulletSprite);
         _canAttack = false;
         _attackTimer.StartTimer();
+        return Node.NodeStates.Success;
+    }
+
+    private Node.NodeStates CanWaveAttack()
+    {
+        if (_canWave)
+        {
+            return Node.NodeStates.Success;
+        }
+        return Node.NodeStates.Failure;
+    }
+
+    private Node.NodeStates WaveAttack()
+    {
+        if (_startWaveTimer)
+        {
+            _waveTimer.StartTimer();
+            _canWave = false;
+        }
+        if (_waveTimer.enabled)
+        {
+            print("wave attacking ");
+            _startWaveTimer = false;
+            return Node.NodeStates.Running;
+        }
+        _startWaveTimer = true;
+        _waveRecharge.StartTimer();
         return Node.NodeStates.Success;
     }
 
