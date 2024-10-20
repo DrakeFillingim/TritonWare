@@ -50,12 +50,12 @@ public class Timer : MonoBehaviour
         enabled = Autostart;
     }
 
-    public void Start()
+    public void StartTimer()
     {
         enabled = true;
     }
 
-    public void Stop()
+    public void StopTimer()
     {
         enabled = false;
     }

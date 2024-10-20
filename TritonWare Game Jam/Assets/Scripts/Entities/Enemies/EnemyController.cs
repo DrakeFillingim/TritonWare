@@ -13,10 +13,11 @@ public class EnemyController : MonoBehaviour
     private float _attackCooldown = .5f;
     private bool _canAttack = true;
 
-    private Timer _spinTimer;
-    private float _spinDuration = .5f;
-    private bool _canSpin = true;
-    private float _currentSpinAngle = 0;
+    private Timer _movementTimer;
+    private bool _startMoveTimer = true;
+    private float _moveDuration = 1;
+    private float _moveDistance = -20;
+    private float _startX;
 
     private EnemyStats _stats;
 
@@ -24,17 +25,22 @@ public class EnemyController : MonoBehaviour
     {
         _bulletSprite = Resources.Load<Sprite>("Sprites/KingTritonProjectile");
         _player = GameObject.Find("Player").transform;
+
         _rootNode = new SelectorNode(new Node[] {
             new SequencerNode(new Node[] {
-                new LeafNode(CheckCanAttack), new LeafNode(CheckPlayerLOS), new LeafNode(FireBullet)
+                new LeafNode(CheckPlayerLOS), 
+                new SuccessNode(new SequencerNode(new Node[] {
+                    new LeafNode(CheckCanAttack), new LeafNode(FireBullet)
+                }))
             }),
             new SequencerNode(new Node[] {
-                new InverterNode(new LeafNode(CheckPlayerLOS)), new LeafNode(CheckCanSpin), new LeafNode(SpinAttack)
+                new LeafNode(Move)
             })
         });
 
         _attackTimer = Timer.CreateTimer(gameObject, () => _canAttack = true, _attackCooldown);
-        _spinTimer = Timer.CreateTimer(gameObject, () => _canSpin = true, _spinDuration / (360.0f / AttackAngle));
+        _movementTimer = Timer.CreateTimer(gameObject, () => { }, _moveDuration);
+        _startX = transform.position.x;
 
         _stats = GetComponent<EnemyStats>();
     }
@@ -67,27 +73,27 @@ public class EnemyController : MonoBehaviour
     {
         Vector3 toPlayer = _player.position - transform.position;
         ProjectileController.ShootBullet(_stats.BulletsFired, Mathf.Atan2(toPlayer.y, toPlayer.x) * Mathf.Rad2Deg, AttackAngle, transform, _bulletSprite);
-
         _canAttack = false;
-        _attackTimer.Start();
+        _attackTimer.StartTimer();
         return Node.NodeStates.Success;
     }
 
-    private Node.NodeStates CheckCanSpin()
+    private Node.NodeStates Move()
     {
-        if (_canSpin)
+        if (_startMoveTimer)
         {
-            return Node.NodeStates.Success;
+            _movementTimer.StartTimer();
+            _startX = transform.position.x;
+            _moveDistance *= -1;
         }
-        return Node.NodeStates.Failure;
-    }
-
-    private Node.NodeStates SpinAttack()
-    {
-        ProjectileController.ShootBullet(1, _currentSpinAngle, AttackAngle, transform, _bulletSprite);
-        _currentSpinAngle += AttackAngle;
-        _canSpin = false;
-        _spinTimer.Start();
+        if (_movementTimer.enabled)
+        {
+            float currentPos = Mathf.Lerp(_startX, _startX + _moveDistance, _movementTimer.CurrentTime / _moveDuration);
+            transform.position = new Vector3(currentPos, transform.position.y, transform.position.z);
+            _startMoveTimer = false;
+            return Node.NodeStates.Running;
+        }
+        _startMoveTimer = true;
         return Node.NodeStates.Success;
     }
 }
