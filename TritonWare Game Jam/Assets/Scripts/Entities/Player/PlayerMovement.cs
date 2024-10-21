@@ -11,6 +11,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private Rigidbody2D _rb;
     private PlayerStats _stats;
+    private SpriteRenderer _renderer;
 
     private float _inputDirection;
 
@@ -44,6 +45,7 @@ public partial class PlayerMovement : MonoBehaviour
         _rb = GetComponent<Rigidbody2D>();
         _rb.freezeRotation = true;
         _stats = GetComponent<PlayerStats>();
+        _renderer = GetComponent<SpriteRenderer>();
 
         _startCheckCooldown = Timer.CreateTimer(gameObject, () => _checkJumps = true, _checkJumpCooldown);
 
@@ -65,6 +67,14 @@ public partial class PlayerMovement : MonoBehaviour
     private void OnMove(InputAction.CallbackContext context)
     {
         _inputDirection = context.ReadValue<float>();
+        if (_inputDirection < 0)
+        {
+            _renderer.flipX = true;
+        }
+        if (_inputDirection > 0)
+        {
+            _renderer.flipX = false;
+        }
     }
 
     private void OnJump(InputAction.CallbackContext context)
