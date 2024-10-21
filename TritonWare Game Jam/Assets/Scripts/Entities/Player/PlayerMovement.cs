@@ -12,6 +12,8 @@ public partial class PlayerMovement : MonoBehaviour
     private Rigidbody2D _rb;
     private PlayerStats _stats;
     private SpriteRenderer _renderer;
+    private Animator _animator;
+    private BoxCollider2D _hitBox;
 
     private float _inputDirection;
 
@@ -46,6 +48,9 @@ public partial class PlayerMovement : MonoBehaviour
         _rb.freezeRotation = true;
         _stats = GetComponent<PlayerStats>();
         _renderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
+        _hitBox = GetComponent<BoxCollider2D>();
+        
 
         _startCheckCooldown = Timer.CreateTimer(gameObject, () => _checkJumps = true, _checkJumpCooldown);
 
@@ -69,11 +74,17 @@ public partial class PlayerMovement : MonoBehaviour
         _inputDirection = context.ReadValue<float>();
         if (_inputDirection < 0)
         {
+            _animator.speed = 1;
             _renderer.flipX = true;
         }
         if (_inputDirection > 0)
         {
+            _animator.speed = 1;
             _renderer.flipX = false;
+        }
+        if (_inputDirection == 0)
+        {
+            _animator.speed = 0;
         }
     }
 
@@ -158,7 +169,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private bool IsGrounded()
     {
-        if (Physics2D.Raycast(transform.position, _gravityDirection, transform.localScale.x / 2 + 0.05f, LayerMask.GetMask("Ground")))
+        if (Physics2D.Raycast(transform.position, _gravityDirection, _hitBox.bounds.size.y / 2 + 0.2f, LayerMask.GetMask("Ground")))
         {
             return true;
         }

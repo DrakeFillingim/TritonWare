@@ -46,7 +46,6 @@ public class Pickup : MonoBehaviour
                 Type propertyType = info.GetValue(_affectedPlayer).GetType();
                 float value = (float)Convert.ChangeType(info.GetValue(_affectedPlayer), typeof(float));
                 info.SetValue(_affectedPlayer, Convert.ChangeType(value + _changeBy, propertyType));
-                print(_statToChange);
                 if (_duration == 0)
                 {
                     Destroy(gameObject);
