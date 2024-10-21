@@ -113,7 +113,7 @@ public class EnemyController : MonoBehaviour
             {
                 angle = 180;
             }
-            GameObject waveAttack = ProjectileController.ShootBullet(1, angle, 0, transform, _waveSprite, new Vector2(transform.position.x, -1.25f), 5, false)[0];
+            GameObject waveAttack = ProjectileController.ShootBullet(1, angle, 0, transform, _waveSprite, new Vector2(transform.position.x, -6.5f), 5, false)[0];
             if (_player.position.x < transform.position.x)
             {
                 waveAttack.GetComponent<SpriteRenderer>().flipY = true;
