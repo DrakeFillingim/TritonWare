@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class EnemyController : MonoBehaviour
 {
-    private const float AttackAngle = 5;
+    private const float AttackAngle = 15;
 
-    private GameObject _waveAttack;
     private Sprite _waveSprite;
     private Sprite _bulletSprite;
     private Transform _player;
@@ -34,7 +33,6 @@ public class EnemyController : MonoBehaviour
     private void Start()
     {
         _waveSprite = Resources.Load<Sprite>("Sprites/WaveAttack");
-        print(_waveAttack);
         _bulletSprite = Resources.Load<Sprite>("Sprites/KingTritonProjectile");
         _player = GameObject.Find("Player").transform;
 
