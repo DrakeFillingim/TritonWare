@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class EnemyStats : MonoBehaviour, IEntityStats
 {
-    private const int StartingHealth = 3;
+    private const int StartingHealth = 25;
 
     public int MaxHealth { get; set; } = StartingHealth;
 
@@ -25,5 +25,5 @@ public class EnemyStats : MonoBehaviour, IEntityStats
     }
 
     public float WalkSpeed { get; set; } = 5;
-    public int BulletsFired { get; set; } = 2;
+    public int BulletsFired { get; set; } = 5;
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public class ProjectileController : MonoBehaviour
 {
+    public event System.Action projectileDestroyed;
+
     private Vector2 _direction;
     private float _speed;
     private Transform _root;
@@ -70,11 +72,13 @@ public class ProjectileController : MonoBehaviour
                 stats.CurrentHealth--;
                 if (_destroyOnCollide)
                 {
+                    projectileDestroyed?.Invoke();
                     Destroy(gameObject);
                 }
             }
             else
             {
+                projectileDestroyed?.Invoke();
                 Destroy(gameObject);
             }
         }

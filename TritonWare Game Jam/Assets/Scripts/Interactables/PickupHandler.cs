@@ -5,21 +5,17 @@ using System.Linq;
 
 public class PickupHandler : MonoBehaviour
 {
-    private const float PowerupCooldown = 2;
+    private const float PowerupCooldown = 5;
 
     private GameObject _pickupPrefab;
-    private float _xMin;
-    private float _xMax;
-    private float _yValue = -1;
+    private const float _xMin = -15;
+    private const float _xMax = 15;
+    private const float _yValue = -6.3f;
 
     private Dictionary<string, PowerupStats> powerupValues;
 
     private void Start()
     {
-        Tilemap map = GameObject.Find("Grid/Tilemap").GetComponent<Tilemap>();
-        _xMin = map.transform.TransformPoint(map.localBounds.min).x;
-        _xMax = map.transform.TransformPoint(map.localBounds.max).x;
-
         _pickupPrefab = Resources.Load<GameObject>("Prefabs/Pickup");
         Timer.CreateTimer(gameObject, CreatePickup, PowerupCooldown, true);
 
