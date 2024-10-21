@@ -109,7 +109,7 @@ public partial class PlayerMovement : MonoBehaviour
             _isDashing.StartTimer();
             _addGravity = false;
             _currentMovement = AddDashForce;
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
+            //GetComponent<FMODUnity.StudioEventEmitter>().Play();
             _canDash = false;
             _rb.velocity = Vector2.zero;
             if (_currentJumps > 0)

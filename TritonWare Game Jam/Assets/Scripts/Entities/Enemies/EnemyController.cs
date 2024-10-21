@@ -6,12 +6,14 @@ public class EnemyController : MonoBehaviour
 
     private Sprite _waveSprite;
     private Sprite _bulletSprite;
+    private SpriteRenderer _renderer;
+    private Animator _animator;
     private Transform _player;
 
     private Node _rootNode;
 
     private Timer _attackTimer;
-    private float _attackCooldown = .5f;
+    private float _attackCooldown = 1f;
     private bool _canAttack = true;
 
     private Timer _movementTimer;
@@ -23,10 +25,8 @@ public class EnemyController : MonoBehaviour
     private bool _canWave = true;
     private Timer _waveRecharge;
     private float _waveCooldown = 5;
-
-    private Timer _waveTimer;
-    private bool _startWaveTimer = true;
-    private float _waveDuration = 5;
+    private bool _isWaving = false;
+    private bool _checkWave = true;
 
     private EnemyStats _stats;
 
@@ -34,6 +34,9 @@ public class EnemyController : MonoBehaviour
     {
         _waveSprite = Resources.Load<Sprite>("Sprites/WaveAttack");
         _bulletSprite = Resources.Load<Sprite>("Sprites/KingTritonProjectile");
+        _renderer = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
+        _animator.speed = 0;
         _player = GameObject.Find("Player").transform;
 
         _rootNode = new SelectorNode(new Node[] {
@@ -53,7 +56,6 @@ public class EnemyController : MonoBehaviour
         _attackTimer = Timer.CreateTimer(gameObject, () => _canAttack = true, _attackCooldown);
         _movementTimer = Timer.CreateTimer(gameObject, () => { }, _moveDuration);
         _waveRecharge = Timer.CreateTimer(gameObject, () => _canWave = true, _waveCooldown);
-        _waveTimer = Timer.CreateTimer(gameObject, () => { }, _waveDuration);
         _startX = transform.position.x;
 
         _stats = GetComponent<EnemyStats>();
@@ -85,6 +87,7 @@ public class EnemyController : MonoBehaviour
 
     private Node.NodeStates FireBullet()
     {
+        _animator.speed = 1;
         Vector3 toPlayer = _player.position - transform.position;
         ProjectileController.ShootBullet(_stats.BulletsFired, Mathf.Atan2(toPlayer.y, toPlayer.x) * Mathf.Rad2Deg, AttackAngle, transform, _bulletSprite, transform.position, 20, true);
         _canAttack = false;
@@ -103,29 +106,32 @@ public class EnemyController : MonoBehaviour
 
     private Node.NodeStates WaveAttack()
     {
-        if (_startWaveTimer)
+        if (!_isWaving && _checkWave)
         {
-            _waveTimer.StartTimer();
+            _isWaving = true;
             _canWave = false;
-
+            _checkWave = false;
+            _animator.speed = 0;
             int angle = 0;
+            float startX = -14;
             if (_player.position.x < transform.position.x)
             {
                 angle = 180;
+                startX = 14;
             }
-            GameObject waveAttack = ProjectileController.ShootBullet(1, angle, 0, transform, _waveSprite, new Vector2(transform.position.x, -6.5f), 5, false)[0];
+            GameObject waveAttack = ProjectileController.ShootBullet(1, angle, 0, transform, _waveSprite, new Vector2(startX, -7.5f), 8, false)[0];
+            waveAttack.GetComponent<ProjectileController>().projectileDestroyed += OnWaveDestroyed;
             if (_player.position.x < transform.position.x)
             {
                 waveAttack.GetComponent<SpriteRenderer>().flipY = true;
             }
             waveAttack.GetComponent<SpriteRenderer>().flipX = true;
         }
-        if (_waveTimer.enabled)
+        if (_isWaving)
         {
-            _startWaveTimer = false;
             return Node.NodeStates.Running;
         }
-        _startWaveTimer = true;
+        _checkWave = true;
         _waveRecharge.StartTimer();
         return Node.NodeStates.Success;
     }
@@ -137,6 +143,7 @@ public class EnemyController : MonoBehaviour
             _movementTimer.StartTimer();
             _startX = transform.position.x;
             _moveDistance *= -1;
+            _animator.speed = 0;
         }
         if (_movementTimer.enabled)
         {
@@ -146,6 +153,17 @@ public class EnemyController : MonoBehaviour
             return Node.NodeStates.Running;
         }
         _startMoveTimer = true;
+        _renderer.flipX = !_renderer.flipX;
         return Node.NodeStates.Success;
+    }
+
+    private void OnWaveDestroyed()
+    {
+        _isWaving = false;
+    }
+
+    public void OnAttackFinish()
+    {
+        _animator.speed = 0;
     }
 }

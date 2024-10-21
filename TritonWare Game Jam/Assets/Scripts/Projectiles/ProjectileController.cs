@@ -49,13 +49,14 @@ public class ProjectileController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        transform.position += new Vector3(_direction.x * _speed, _direction.y * _speed, 0);
         CheckCollision();
+        transform.position += new Vector3(_direction.x * _speed, _direction.y * _speed, 0);
     }
 
     private void CheckCollision()
     {
-        RaycastHit2D hit = Physics2D.CircleCast(transform.position, transform.localScale.y, _direction, _speed, ~LayerMask.GetMask("Bullets", "Powerups"));
+        Vector2 colliderSize = GetComponent<BoxCollider2D>().bounds.size;
+        RaycastHit2D hit = Physics2D.CircleCast(transform.position, colliderSize.y / 2, _direction, _speed, ~LayerMask.GetMask("Bullets", "Powerups"));
         if (hit.collider != null)
         {
             OnCollision(hit.collider);
