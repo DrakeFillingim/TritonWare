@@ -5,9 +5,10 @@ using UnityEngine;
 public class KingTriton : MonoBehaviour
 {
 
-    public int maxHealth = 100;
+    public const int maxHealth = 100;
     public int currentHealth;
-
+    public float PhaseTwoTriggerHealth = (float)maxHealth / 2;
+    public bool PhaseTwo = false;
     public HealthBar healthBar;
 
     // Start is called before the first frame update
@@ -30,6 +31,10 @@ public class KingTriton : MonoBehaviour
     {
         currentHealth -= damage;
 
+        if(currentHealth <= PhaseTwoTriggerHealth)
+        {
+            PhaseTwo = true;
+        }
         if(currentHealth <= 0)
         {
             Destroy(gameObject);
