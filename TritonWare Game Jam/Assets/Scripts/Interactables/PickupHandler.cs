@@ -10,7 +10,7 @@ public class PickupHandler : MonoBehaviour
     private GameObject _pickupPrefab;
     private const float _xMin = -15;
     private const float _xMax = 15;
-    private const float _yValue = -6.3f;
+    private const float _yValue = -9;
 
     private Dictionary<string, PowerupStats> powerupValues;
 
