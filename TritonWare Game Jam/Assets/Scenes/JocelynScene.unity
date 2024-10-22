@@ -845,9 +845,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 022d312e899824669b4b6fd62fb12a9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 1799728887}
+  bullet: {fileID: 4129154373061097611, guid: 77358c04789254e838c2ffec812eb156, type: 3}
   bulletPos: {fileID: 0}
-  player: {fileID: 0}
+  player: {fileID: 1799728887}
 --- !u!50 &673428876
 Rigidbody2D:
   serializedVersion: 4
