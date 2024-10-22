@@ -18,10 +18,18 @@ public class PlayerAttack : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody2D>();
         _stats = GetComponent<PlayerStats>();
+        _bulletSprite = Resources.Load<Sprite>("Sprites/Powerups/PlayerBullet");
+    }
+
+    private void OnEnable()
+    {
         _inputMap = GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player");
         _inputMap["Attack"].performed += OnAttack;
+    }
 
-        _bulletSprite = Resources.Load<Sprite>("Sprites/PlayerBullet");
+    private void OnDisable()
+    {
+        _inputMap["Attack"].performed -= OnAttack;
     }
 
     private void FixedUpdate()

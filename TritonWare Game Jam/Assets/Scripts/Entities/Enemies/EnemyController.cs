@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
     private Node _rootNode;
 
     private Timer _attackTimer;
-    private float _attackCooldown = 1f;
+    private float _attackCooldown = 2f;
     private bool _canAttack = true;
 
     private Timer _movementTimer;
@@ -32,8 +32,8 @@ public class EnemyController : MonoBehaviour
 
     private void Start()
     {
-        _waveSprite = Resources.Load<Sprite>("Sprites/WaveAttack");
-        _bulletSprite = Resources.Load<Sprite>("Sprites/KingTritonProjectile");
+        _waveSprite = Resources.Load<Sprite>("Sprites/KingTriton/WaveAttack");
+        _bulletSprite = Resources.Load<Sprite>("Sprites/KingTriton/KingTritonProjectile");
         _renderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _animator.speed = 0;
