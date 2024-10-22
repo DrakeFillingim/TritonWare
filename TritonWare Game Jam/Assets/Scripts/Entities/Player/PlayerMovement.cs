@@ -134,6 +134,7 @@ public class PlayerMovement : MonoBehaviour
             _animator.Play("PlayerDash");
             _addGravity = false;
             _currentMovement = AddDashForce;
+            GetComponent<FMODUnity.StudioEventEmitter>().Play();
             _canDash = false;
             _isDashing = true;
             _rb.velocity = Vector2.zero;
