@@ -54,6 +54,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 16700
+--- !u!114 &-4721168814778519578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/WaveAttack
+  m_EditorClassIdentifier: 
+  Path: event:/WaveAttack
+  Guid:
+    Data1: -156735864
+    Data2: 1338450982
+    Data3: -1747462981
+    Data4: -1062880270
+  Banks:
+  - {fileID: -1870386869009467964}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3336
 --- !u!114 &-4048133512031920920
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -69,7 +96,7 @@ MonoBehaviour:
   Path: ../../../FMOD Studio/TritonWareGameJam/TritonsDomain/Build/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638651925908098617
+  lastModified: 638651930987186896
   FileSizes:
   - Name: Desktop
     Value: 1036
@@ -89,11 +116,38 @@ MonoBehaviour:
   Path: ../../../FMOD Studio/TritonWareGameJam/TritonsDomain/Build/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638651925907957565
+  lastModified: 638651930987255441
   FileSizes:
   - Name: Desktop
-    Value: 1032
+    Value: 1186
   Exists: 1
+--- !u!114 &-3056425800030437836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Jump
+  m_EditorClassIdentifier: 
+  Path: event:/Jump
+  Guid:
+    Data1: 756141964
+    Data2: 1295906152
+    Data3: -1382821241
+    Data4: -1305108006
+  Banks:
+  - {fileID: -1870386869009467964}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 978
 --- !u!114 &-1870386869009467964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -109,10 +163,10 @@ MonoBehaviour:
   Path: ../../../FMOD Studio/TritonWareGameJam/TritonsDomain/Build/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 638651925907733337
+  lastModified: 638651934824919817
   FileSizes:
   - Name: Desktop
-    Value: 10080
+    Value: 77344
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -137,12 +191,16 @@ MonoBehaviour:
   - {fileID: 7819166733860640039}
   - {fileID: -7255686117452173523}
   - {fileID: -8897933023513896103}
+  - {fileID: 1401442210302701075}
+  - {fileID: -4721168814778519578}
+  - {fileID: -3056425800030437836}
+  - {fileID: 8996432552659318763}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4048133512031920920}
   StringsBanks:
   - {fileID: -3728682252218741323}
-  cacheTime: 638651925908396261
+  cacheTime: 638651934824919817
   cacheVersion: 131620
 --- !u!114 &542350866894754855
 MonoBehaviour:
@@ -159,11 +217,38 @@ MonoBehaviour:
   Path: ../../../FMOD Studio/TritonWareGameJam/TritonsDomain/Build/Desktop/Music.bank
   Name: Music
   StudioPath: bank:/Music
-  lastModified: 638651925908396261
+  lastModified: 638651896871837617
   FileSizes:
   - Name: Desktop
     Value: 1365440
   Exists: 1
+--- !u!114 &1401442210302701075
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Footsteps
+  m_EditorClassIdentifier: 
+  Path: event:/Footsteps
+  Guid:
+    Data1: 1658404418
+    Data2: 1173792258
+    Data3: 606593703
+    Data4: -1503917521
+  Banks:
+  - {fileID: -1870386869009467964}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1120
 --- !u!114 &6471412179043973057
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,6 +303,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 6600
+--- !u!114 &8996432552659318763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Landing
+  m_EditorClassIdentifier: 
+  Path: event:/Landing
+  Guid:
+    Data1: 1600818638
+    Data2: 1342157068
+    Data3: -1933945959
+    Data4: -1232282775
+  Banks:
+  - {fileID: -1870386869009467964}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 141
 --- !u!114 &9208376523661978448
 MonoBehaviour:
   m_ObjectHideFlags: 0
