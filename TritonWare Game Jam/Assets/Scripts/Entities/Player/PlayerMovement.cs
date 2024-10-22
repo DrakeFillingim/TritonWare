@@ -34,6 +34,11 @@ public class PlayerMovement : MonoBehaviour
     private float _xToAdd = 0;
     private float _dashDirection = 1;
 
+    private GameObject _dash;
+    private GameObject _jump;
+    private GameObject _footsteps;
+    private GameObject _landing;
+
     private System.Action _currentMovement;
 
     private void Start()
@@ -60,6 +65,10 @@ public class PlayerMovement : MonoBehaviour
         _inputMap["Jump"].performed += OnJump;
         _inputMap["Dash"].performed += OnDash;
         _inputMap["Pause"].performed += _ => Debug.Break();
+        _dash = GameObject.Find("Dash");
+        _jump = GameObject.Find("Jump");
+        _landing = GameObject.Find("Landing");
+        _footsteps = GameObject.Find("Footsteps");
     }
 
     private void OnDisable()
@@ -100,16 +109,19 @@ public class PlayerMovement : MonoBehaviour
         if (_inputDirection < 0)
         {
             _animator.speed = 1;
+            _footsteps.GetComponent<FMODUnity.StudioEventEmitter>().Play();
             _renderer.flipX = true;
         }
         if (_inputDirection > 0)
         {
             _animator.speed = 1;
+            _footsteps.GetComponent<FMODUnity.StudioEventEmitter>().Play();
             _renderer.flipX = false;
         }
         if (_inputDirection == 0 && _addGravity)
         {
             _animator.speed = 0;
+            _footsteps.GetComponent<FMODUnity.StudioEventEmitter>().Stop();
         }
 
     }
@@ -120,6 +132,7 @@ public class PlayerMovement : MonoBehaviour
         {
             _rb.velocity = new Vector2(_rb.velocity.x, 0);
             _rb.AddForce(Vector2.up * _stats.JumpHeight, ForceMode2D.Impulse);
+            _jump.GetComponent<FMODUnity.StudioEventEmitter>().Play();
             _currentJumps++;
             _checkJumps = false;
             _startCheckCooldown.StartTimer();
@@ -132,9 +145,9 @@ public class PlayerMovement : MonoBehaviour
         {
             _animator.speed = 1;
             _animator.Play("PlayerDash");
+            _dash.GetComponent<FMODUnity.StudioEventEmitter>().Play();
             _addGravity = false;
             _currentMovement = AddDashForce;
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
             _canDash = false;
             _isDashing = true;
             _rb.velocity = Vector2.zero;
@@ -171,6 +184,7 @@ public class PlayerMovement : MonoBehaviour
         if (_rb.velocity.magnitude <= 0.01f)
         {
             _rb.velocity = Vector2.zero;
+            _footsteps.GetComponent<FMODUnity.StudioEventEmitter>().Stop();
         }
     }
 
@@ -179,6 +193,7 @@ public class PlayerMovement : MonoBehaviour
         if (IsGrounded() && _checkJumps)
         {
             _currentJumps = 0;
+            _landing.GetComponent<FMODUnity.StudioEventEmitter>().Play();
         }
     }
 
