@@ -13,7 +13,7 @@ public class EnemyController : MonoBehaviour
     private Node _rootNode;
 
     private Timer _attackTimer;
-    private float _attackCooldown = 2f;
+    private float _attackCooldown = 1.25f;
     private bool _canAttack = true;
 
     private Timer _movementTimer;

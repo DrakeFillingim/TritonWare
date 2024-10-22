@@ -37,6 +37,6 @@ public class PlayerStats : MonoBehaviour, IEntityStats
 
     public float WalkSpeed { get; set; } = 5;
     public int MaxJumps { get; set; } = 2;
-    public float JumpHeight { get; set; } = 15;
+    public float JumpHeight { get; set; } = 20;
     public int BulletsFired { get; set; } = 1;
 }
