@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
     private const float Acceleration = .2f;
     private const float Deceleration = .1f;
-    private const int DashAmmo = 5;
+    private const int DashAmmo = 3;
 
     private InputActionMap _inputMap;
 
@@ -30,7 +30,9 @@ public class PlayerMovement : MonoBehaviour
     private float _dashCooldown = 1.5f;
     private bool _canDash = true;
     private bool _dashEnded = false;
+    private bool _isDashing = false;
     private float _xToAdd = 0;
+    private float _dashDirection = 1;
 
     private System.Action _currentMovement;
 
@@ -72,8 +74,10 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_dashEnded)
         {
+            print(_xToAdd);
             transform.position += new Vector3(_xToAdd, 0, 0);
             _dashEnded = false;
+            _isDashing = false;
             _xToAdd = 0;
         }
     }
@@ -89,6 +93,10 @@ public class PlayerMovement : MonoBehaviour
     #region InputMessages
     private void OnMove(InputAction.CallbackContext context)
     {
+        if (_isDashing)
+        {
+            return;
+        }
         _inputDirection = context.ReadValue<float>();
         if (_inputDirection < 0)
         {
@@ -104,6 +112,7 @@ public class PlayerMovement : MonoBehaviour
         {
             _animator.speed = 0;
         }
+
     }
 
     private void OnJump(InputAction.CallbackContext context)
@@ -127,10 +136,20 @@ public class PlayerMovement : MonoBehaviour
             _addGravity = false;
             _currentMovement = AddDashForce;
             _canDash = false;
+            _isDashing = true;
             _rb.velocity = Vector2.zero;
             if (_currentJumps > 0)
             {
                 _currentJumps--;
+            }
+            if (_renderer.flipX)
+            {
+                _dashDirection = -1;
+                print("-1");
+            }
+            else
+            {
+                _dashDirection = 1;
             }
         }
     }
@@ -141,16 +160,11 @@ public class PlayerMovement : MonoBehaviour
         _dashRecharge.StartTimer();
         _addGravity = true;
         _currentMovement = AddPlayerForce;
-        _rb.velocity = new Vector2(_rb.velocity.x, 0);
         _stats.CurrentAmmo += DashAmmo;
         
         _animator.Play("PlayerWalk");
         _dashEnded = true;
-        _xToAdd = _renderer.sprite.bounds.size.x - _hitBox.bounds.size.x;
-        if (_renderer.flipX)
-        {
-            _xToAdd *= -1;
-        }
+        _xToAdd = (_renderer.sprite.bounds.size.x - _hitBox.bounds.size.x) * _dashDirection;
     }
 
     private void ResetVelocity()
