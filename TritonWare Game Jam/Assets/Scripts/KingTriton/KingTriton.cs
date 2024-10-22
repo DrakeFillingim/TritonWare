@@ -2,12 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class KingTriton : MonoBehaviour
 {
-    public int maxHealth = 100;
+    public const int maxHealth = 100;
     public int currentHealth;
-
+    public float PhaseTwoTriggerHealth = (float)maxHealth / 2;
+    public bool PhaseTwo = false;
     public HealthBar healthBar;
+    public GameObject music1;
+    public GameObject music2;
+
 
     public int damage = 5;
 
@@ -45,6 +51,15 @@ public class KingTriton : MonoBehaviour
             rb.rotation = angle;
             moveDirection = direction;
         }
+        music1 = GameObject.Find("PhaseOneMusic");
+        music2 = GameObject.Find("PhaseTwoMusic");
+        music1.GetComponent<FMODUnity.StudioEventEmitter>().Play();
+        if(currentHealth <= PhaseTwoTriggerHealth)
+        {
+            PhaseTwo = true;
+            music1.GetComponent<FMODUnity.StudioEventEmitter>().Stop();
+            music2.GetComponent<FMODUnity.StudioEventEmitter>().Play();
+        }
     
     
     }
@@ -73,6 +88,7 @@ public class KingTriton : MonoBehaviour
             isDead = true;
            // gameManager.youWin();
             Destroy(gameObject);
+            music2.GetComponent<FMODUnity.StudioEventEmitter>().Stop();
         }
 
         healthBar.SetHealth(currentHealth);
