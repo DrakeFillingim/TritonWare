@@ -24,7 +24,6 @@ public class GeneralSettings : MonoBehaviour
 
     private void OnQuit(InputAction.CallbackContext context)
     {
-        print("here");
         Application.Quit();
     }
 }
