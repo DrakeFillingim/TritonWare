@@ -74,7 +74,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_dashEnded)
         {
-            print(_xToAdd);
             transform.position += new Vector3(_xToAdd, 0, 0);
             _dashEnded = false;
             _isDashing = false;
@@ -145,7 +144,6 @@ public class PlayerMovement : MonoBehaviour
             if (_renderer.flipX)
             {
                 _dashDirection = -1;
-                print("-1");
             }
             else
             {
