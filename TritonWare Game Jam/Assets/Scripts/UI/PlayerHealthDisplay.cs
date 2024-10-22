@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,21 +10,19 @@ public class PlayerHealthDisplay : MonoBehaviour
     public Sprite fullHeart;
     public Image[] hearts;
 
-    public PlayerStats playerStats;
+    private PlayerStats _playerStats;
 
 
-    // Start is called before the first frame update
     void Start()
     {
-        
+        _playerStats = GetComponent<PlayerStats>();
     }
 
-    // Update is called once per frame
     void Update()
     {
 
-        health = playerStats.CurrentHealth;
-        maxHealth = playerStats.MaxHealth;
+        health = _playerStats.CurrentHealth;
+        maxHealth = _playerStats.MaxHealth;
         
         for(int i = 0; i < hearts.Length; i++)
         {

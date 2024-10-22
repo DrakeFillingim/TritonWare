@@ -21,10 +21,10 @@ public class PickupHandler : MonoBehaviour
 
         powerupValues = new Dictionary<string, PowerupStats>()
         {
-            { "CurrentAmmo", new PowerupStats(10, 0, Resources.Load<Sprite>("Sprites/PlayerBullet")) },
-            { "WalkSpeed", new PowerupStats(7.5f, 5, Resources.Load<Sprite>("Sprites/SpeedupBoost")) },
-            { "BulletsFired", new PowerupStats(2, 5, Resources.Load<Sprite>("Sprites/Shoot3Bullets")) },
-            { "CurrentHealth", new PowerupStats(1, 0, Resources.Load<Sprite>("Sprites/Plus1Heart")) }
+            { "CurrentAmmo", new PowerupStats(10, 0, Resources.Load<Sprite>("Sprites/Powerups/PlayerBullet")) },
+            { "WalkSpeed", new PowerupStats(7.5f, 5, Resources.Load<Sprite>("Sprites/Powerups/SpeedupBoost")) },
+            { "BulletsFired", new PowerupStats(2, 5, Resources.Load<Sprite>("Sprites/Powerups/Shoot3Bullets")) },
+            { "CurrentHealth", new PowerupStats(1, 0, Resources.Load<Sprite>("Sprites/Powerups/Plus1Heart")) }
         };
     }
 

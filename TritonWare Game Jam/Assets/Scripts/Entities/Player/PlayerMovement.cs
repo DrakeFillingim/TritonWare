@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public partial class PlayerMovement : MonoBehaviour
+public class PlayerMovement : MonoBehaviour
 {
     private const float Acceleration = .2f;
     private const float Deceleration = .1f;
@@ -26,38 +26,56 @@ public partial class PlayerMovement : MonoBehaviour
     private float _gravityScale = 37;
     private bool _addGravity = true;
 
-    private Timer _isDashing;
     private Timer _dashRecharge;
-    private float _dashSpeed = 5;
-    private float _dashTime = .25f;
     private float _dashCooldown = 1.5f;
     private bool _canDash = true;
-    private Vector2 _dashDirection = Vector2.right;
+    private bool _dashEnded = false;
+    private float _xToAdd = 0;
 
     private System.Action _currentMovement;
 
     private void Start()
     {
-        _inputMap = GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player");
-        _inputMap["Move"].performed += OnMove;
-        _inputMap["Jump"].performed += OnJump;
-        _inputMap["Dash"].performed += OnDash;
-        _inputMap["Pause"].performed += _ => Debug.Break();
-
         _rb = GetComponent<Rigidbody2D>();
         _rb.freezeRotation = true;
         _stats = GetComponent<PlayerStats>();
         _renderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _hitBox = GetComponent<BoxCollider2D>();
-        
+
+        _animator.speed = 0;
 
         _startCheckCooldown = Timer.CreateTimer(gameObject, () => _checkJumps = true, _checkJumpCooldown);
-
-        _isDashing = Timer.CreateTimer(gameObject, OnDashExit, _dashTime);
         _dashRecharge = Timer.CreateTimer(gameObject, () => _canDash = true, _dashCooldown);
 
         _currentMovement = AddPlayerForce;
+    }
+
+    private void OnEnable()
+    {
+        _inputMap = GameObject.Find("InputHandler").GetComponent<PlayerInput>().actions.FindActionMap("Player");
+        _inputMap["Move"].performed += OnMove;
+        _inputMap["Jump"].performed += OnJump;
+        _inputMap["Dash"].performed += OnDash;
+        _inputMap["Pause"].performed += _ => Debug.Break();
+    }
+
+    private void OnDisable()
+    {
+        _inputMap["Move"].performed -= OnMove;
+        _inputMap["Jump"].performed -= OnJump;
+        _inputMap["Dash"].performed -= OnDash;
+        _inputMap["Pause"].performed -= _ => Debug.Break();
+    }
+
+    private void Update()
+    {
+        if (_dashEnded)
+        {
+            transform.position += new Vector3(_xToAdd, 0, 0);
+            _dashEnded = false;
+            _xToAdd = 0;
+        }
     }
 
     private void FixedUpdate()
@@ -82,7 +100,7 @@ public partial class PlayerMovement : MonoBehaviour
             _animator.speed = 1;
             _renderer.flipX = false;
         }
-        if (_inputDirection == 0)
+        if (_inputDirection == 0 && _addGravity)
         {
             _animator.speed = 0;
         }
@@ -104,12 +122,10 @@ public partial class PlayerMovement : MonoBehaviour
     {
         if (context.control.IsActuated() && _canDash)
         {
-            Vector2 toMouse = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
-            _dashDirection = (toMouse - new Vector2(transform.position.x, transform.position.z)).normalized;
-            _isDashing.StartTimer();
+            _animator.speed = 1;
+            _animator.Play("PlayerDash");
             _addGravity = false;
             _currentMovement = AddDashForce;
-            GetComponent<FMODUnity.StudioEventEmitter>().Play();
             _canDash = false;
             _rb.velocity = Vector2.zero;
             if (_currentJumps > 0)
@@ -120,13 +136,21 @@ public partial class PlayerMovement : MonoBehaviour
     }
     #endregion
 
-    private void OnDashExit()
+    public void OnDashExit()
     {
         _dashRecharge.StartTimer();
         _addGravity = true;
         _currentMovement = AddPlayerForce;
         _rb.velocity = new Vector2(_rb.velocity.x, 0);
         _stats.CurrentAmmo += DashAmmo;
+        
+        _animator.Play("PlayerWalk");
+        _dashEnded = true;
+        _xToAdd = _renderer.sprite.bounds.size.x - _hitBox.bounds.size.x;
+        if (_renderer.flipX)
+        {
+            _xToAdd *= -1;
+        }
     }
 
     private void ResetVelocity()
@@ -156,7 +180,7 @@ public partial class PlayerMovement : MonoBehaviour
 
     private void AddDashForce()
     {
-        _rb.velocity = (_dashDirection * _dashSpeed) / _dashTime;
+        //_rb.velocity = (_dashDirection * _dashSpeed) / _dashTime;
     }
 
     private void AddGravityForce()
